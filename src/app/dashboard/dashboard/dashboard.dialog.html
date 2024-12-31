@@ -1,0 +1,49 @@
+<div class="card modal-card-update">
+    <div class="card-title">
+        <h1>{{ data.title }}</h1>
+        <mat-icon (click)="closeDialog()" class="modal-close-button">close</mat-icon>
+    </div>
+
+    <hr>
+
+    <div *ngIf="data.itemList.length > 0" class="modal-product-container">
+        <div>
+            <table>
+                <tr style="position: sticky; top: 0; background-color: white;">
+                    <th width="5%">Pilih</th>
+                    <th width="15%">Foto Produk</th>
+                    <th width="25%">Nama Produk</th>
+                    <th width="20%">Kisaran Harga</th>
+                    <th width="25%">Nama UKM/UMKM</th>
+                </tr>
+                <tr *ngFor="let item of data.itemList; let i = index">
+                    <td>
+                        <input type="checkbox" name="" [id]="item.id" style="cursor: pointer;" [checked]="item.fav" (click)="onCheckboxClick($event, i)">
+                    </td>
+                    <td>
+                        <div class="item-selected-image">
+                            <img [src]="item.src" 
+                                alt="" 
+                                *ngIf="item.src != ''" 
+                                width="100%" height="100%" 
+                                id="item-image-preview-a{{i}}"
+                                (click)="openDialogImage('item-image-preview-a' + i)">
+                            <img src="/assets/images/placeholder.png" 
+                                alt="" 
+                                *ngIf="item.src == ''" 
+                                width="100%" height="100%" 
+                                id="item-image-preview-b{{i}}"
+                                (click)="openDialogImage('item-image-preview-b' + i)">
+                        </div>
+                    </td>
+                    <td>{{ item.item }}</td>
+                    <td>{{ item.price != "Gratis" ? "Rp. " + item.price : "Gratis" }}</td>
+                    <td>{{ item.umkm }}</td>
+                </tr>
+            </table>
+        </div>
+        <br>
+    </div>
+
+    <button mat-flat-button color="primary" (click)="onSaveAddFavItem()" id="card-bottom" style="width: 100%; margin-top: 24px;">SIMPAN</button>
+</div>

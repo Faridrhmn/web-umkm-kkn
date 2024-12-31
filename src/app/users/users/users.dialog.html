@@ -1,0 +1,87 @@
+<div class="card modal-card">
+    <div class="card-title">
+        <h1>{{ data.title }}</h1>
+        <mat-icon mat-dialog-close class="modal-close-button">close</mat-icon>
+    </div>
+
+    <hr>
+    <br>
+
+    <div class="modal-content" *ngIf="!data.isSearch">
+        <div class="modal-content-form" [formGroup]="userFrom" *ngIf="!data.isPreview">
+            <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input matInput placeholder="Username" disabled [value]="data.user.username" *ngIf="!data.isAddUser">
+                <input matInput placeholder="Username" formControlName="username" *ngIf="data.isAddUser">
+                <mat-hint>
+                    <span *ngIf="!data.isAddUser" style="color: #465a8b;">
+                        Note : Username tidak dapat di edit lagi
+                    </span>
+                </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Nama Lengkap</mat-label>
+                <input matInput placeholder="Nama Lengkap" formControlName="fullname">
+                <mat-hint></mat-hint>
+            </mat-form-field>
+
+            <mat-radio-group aria-label="Select an option" formControlName="role">
+                <mat-label>Role : </mat-label>
+                <mat-radio-button value="admin">Admin</mat-radio-button>
+                <mat-radio-button value="reporter">Reporter</mat-radio-button>
+            </mat-radio-group>
+
+            <button mat-flat-button color="primary" (click)="onAddUser()">SIMPAN</button>
+        </div>
+        <div class="modal-content-preview" *ngIf="data.isPreview">
+            <table>
+                <tr></tr>
+                <tr>
+                    <th>Nama Lengkap</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.user.fullname }}</td>
+                </tr>
+                <tr>
+                    <th>Username</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.user.username }}</td>
+                </tr>
+                <tr>
+                    <th>Role</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.user.role }}</td>
+                </tr>
+            </table>
+            <br>
+            <button 
+                mat-flat-button 
+                color="primary" 
+                (click)="onResetPassword(data.user.id)"
+                *ngIf="data.user.username != 'admin'"
+                >Reset Password
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-content" *ngIf="data.isSearch">
+        <div class="modal-content-form" [formGroup]="searchForm">
+            <mat-form-field appearance="fill">
+                <mat-label>Kata Kunci</mat-label>
+                <input matInput placeholder="Kata Kunci" formControlName="keyword">
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-hint></mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Role</mat-label>
+                <mat-select formControlName="role">
+                    <mat-option value="all">Semua</mat-option>
+                    <mat-option value="admin">Admin</mat-option>
+                    <mat-option value="reporter">Reporter</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" (click)="onSearch()">CARI</button>
+        </div>
+    </div>
+</div>

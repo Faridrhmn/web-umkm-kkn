@@ -1,0 +1,27 @@
+<div class="card modal-card">
+    <div class="card-title">
+        <h1>{{ data.title }}</h1>
+        <mat-icon mat-dialog-close class="modal-close-button">close</mat-icon>
+    </div>
+
+    <hr>
+    <br>
+
+    <div class="modal-content">
+        <div class="modal-content-form" [formGroup]="newMapFrom">
+            <mat-form-field appearance="fill">
+                <mat-label>Nama Layer</mat-label>
+                <input matInput placeholder="Nama Layer" formControlName="name">
+                <mat-hint></mat-hint>
+            </mat-form-field>
+
+            <div class="color-picker">
+                <mat-label>Warna Layer</mat-label>
+                <input matInput placeholder="Warna Layer" formControlName="color" type="color">
+            </div>
+
+            <button *ngIf="data.isNewMap" mat-flat-button color="primary" (click)="onStartDrawMode()">MULAI MENGGAMBAR</button>
+            <button *ngIf="!data.isNewMap" mat-flat-button color="primary" (click)="onEditLayer()">SIMPAN</button>
+        </div>
+    </div>
+</div>

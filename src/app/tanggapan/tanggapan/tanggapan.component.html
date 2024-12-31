@@ -1,0 +1,40 @@
+<div class="user-container">
+    <div class="card">
+        <div class="card-title">
+            <h3>Tanggapan Pengguna</h3>
+            <div class="card-button">
+                <button mat-flat-button style="background-color: #cccccc;" (click)="openDialogSearch()">
+                    <mat-icon>search</mat-icon>
+                    <span>Pencarian</span>
+                </button>
+            </div>
+        </div>
+        <hr>
+        <table>
+            <tr>
+                <th width="10%">No</th>
+                <th width="25%">Nama Lengkap</th>
+                <th width="25%">Email / Telepon</th>
+                <th width="40%">Tanggapan</th>
+            </tr>
+            <tr *ngFor="let tanggapan of tanggapanList; let i = index">
+                <ng-container *ngIf="i >= pageIndex * pageSize && i < (pageIndex * pageSize) + pageSize">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ tanggapan.fullname }}</td>
+                    <td>{{ (tanggapan.email == "") ? "anonim" : tanggapan.email }}</td>
+                    <td>{{ tanggapan.tanggapan }}</td>
+                </ng-container>
+            </tr>
+        </table>
+        <br>
+        <div class="paginator">
+            <mat-paginator [length]="tanggapanList.length"
+                (page)="handlePageEvent($event)"
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10]"
+                [showFirstLastButtons]="true"
+                aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="login-container">
+    <mat-card>
+        <mat-card-content [formGroup]="loginForm">
+            <h1 style="font-size: 32px; text-align: center;">SIM Dusun Ngaglik</h1>
+            <h1 style="text-align: center;">Login</h1>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input matInput placeholder="Username" formControlName="username" (keyup.enter)="login()">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-hint></mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input #password matInput [type]="hide ? 'password' : 'text'" placeholder="Password" formControlName="password"  (keyup.enter)="login()">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" (click)="login()">LOGIN</button>
+        </mat-card-content>
+    </mat-card>
+</div>

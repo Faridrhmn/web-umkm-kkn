@@ -1,0 +1,209 @@
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    font-size: 18px
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+* :not(mat-icon) {
+    font-family: 'Ubuntu', "Helvetica Neue", sans-serif;
+}
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.card2 {
+    grid-column: 1 / span 2;
+
+}
+
+.big_text {
+    font-size: 48px;
+}
+
+.medium_text {
+    font-size: 20px;
+}
+
+.card {
+    background-color: white;
+    padding: 16px;
+    border-top: 6px solid #39728A;
+    border-radius: 6px;
+}
+
+.card-title {
+    margin-block: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-button {
+    display: flex;
+    gap: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: start;
+}
+
+th, td {
+    padding: 16px 8px;
+}
+
+tr:hover {
+    background-color: #efefef;
+}
+
+tr:first-child:hover{
+    background-color:transparent;
+}
+
+.add-button {
+    background-color: #39728A;
+}
+
+.action-button {
+    margin-right: 12px;
+    margin-block: 6px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.action-button div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-button mat-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+}
+
+.download-button {
+    width: 100%;
+    height: calc(100% - 72px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.tanggapan-list {
+    background-color: #e0e0e0;
+    padding: 12px;
+    margin-block: 12px;
+    border-bottom-left-radius: 16px;
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.tanggapan-fullname {
+    font-weight: 700;
+}
+
+.tanggapan-text {
+    font-size: 16px;
+    background-color: white;
+    margin-block: 4px;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.tranggapan-text-p {
+    background-color: white;
+    margin-top: 4px;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+
+
+
+
+
+
+// MODAL
+.modal-card {
+    width: 32vw;
+    background-color: white;
+    padding: 16px 32px;
+    border-radius: 0;
+}
+
+.modal-card-update {
+    width: 60vw;
+    background-color: white;
+    padding: 16px 32px;
+    border-radius: 0;
+}
+
+.modal-close-button {
+    cursor: pointer;
+}
+
+.modal-content-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-content-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.dialog-button {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.dialog-button button {
+    width: 100%;
+    font-size: 30px;
+}
+
+
+.modal-product-container {
+    max-height: 60vh;
+    overflow-y: scroll;
+}
+
+.item-selected-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #888888;
+}
+
+.item-selected-image img {
+    cursor: pointer;
+}
+
+
+
+
+
+@media only screen and (max-width: 900px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+
+    .card2 {
+        grid-column: 1;
+    }
+}

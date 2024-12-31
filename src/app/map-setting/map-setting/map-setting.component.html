@@ -1,0 +1,95 @@
+<div class="map-container">
+    <div class="card">
+        <div class="card-title">
+            <h1>Pengaturan Map</h1>
+            <div class="card-button">
+                <button mat-flat-button style="background-color: #cccccc;"  *ngIf="!isDrawMode" (click)="toggleSetCenter()">
+                    <mat-icon>{{ isSetCenter ? 'cancel' : 'filter_center_focus' }}</mat-icon>
+                    <span>{{ isSetCenter ? 'Batal' : 'Ubah Titik Tengah' }}</span>
+                </button>
+                <button mat-flat-button style="background-color: #1cdc62;"  *ngIf="isSetCenter" (click)="onSaveCenterDialog()">
+                    <mat-icon>done</mat-icon>
+                    <span>Simpan</span>
+                </button>
+                <div *ngIf="isDrawMode" style="display: flex; gap: 16px;">
+                    <button mat-flat-button style="background-color: #cccccc;" (click)="drawState('undo')" [disabled]="drawUndoDisabled">
+                        <mat-icon>undo</mat-icon>
+                        <span>Undo</span>
+                    </button>
+                    <button mat-flat-button style="background-color: #cccccc;" (click)="drawState('redo')" [disabled]="drawRedoDisabled">
+                        <mat-icon>redo</mat-icon>
+                        <span>Redo</span>
+                    </button>
+                </div>
+                <button mat-flat-button style="background-color: #cccccc;" (click)="toggleDrawMode(false)" *ngIf="isDrawMode">
+                    <mat-icon>cancel</mat-icon>
+                    <span>Batal</span>
+                </button>
+                <button mat-flat-button style="background-color: #1cdc62;" (click)="handleGreenButton()" *ngIf="!isSetCenter">
+                    <mat-icon>{{ buttonMode.icon }}</mat-icon>
+                    <span>{{ buttonMode.text }}</span>
+                </button>
+            </div>
+        </div>
+        <hr>
+        <div class="map" id="mapElement"></div>
+        <br>
+    </div>
+
+    <br>
+
+    <div class="card">
+        <div class="card-title">
+            <h1>Daftar Layer</h1>
+        </div>
+        <hr>
+        <table>
+            <tr>
+                <th width="10%">No</th>
+                <th width="25%">Nama Layer</th>
+                <th width="25%">Warna</th>
+                <th width="15%">Layer Aktif</th>
+                <th width="25%">Action</th>
+            </tr>
+            <tr *ngFor="let layer of layerList; let i = index">
+                <ng-container *ngIf="i >= pageIndex * pageSize && i < (pageIndex * pageSize) + pageSize">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ layer.name }}</td>
+                    <td>
+                        <div style="display: flex; align-items: center;">
+                            <div class="layer-color" [style]="{backgroundColor: layer.color}"></div>
+                            <span>{{ layer.color }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <mat-checkbox [checked]="layer.isActive" (change)="onEditLayer(layer, true)"></mat-checkbox>
+                    </td>
+                    <td class="action">
+                        <button class="action-button" (click)="openDialog('edit', 'Edit Layer', layer)">
+                            <div>
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>   
+                            </div>
+                        </button>
+                        <button class="action-button" (click)="onDataUpdateDialog('delete', layer)">
+                            <div>
+                                <mat-icon>delete</mat-icon>
+                                <span>Hapus</span>
+                            </div>
+                        </button>
+                    </td>
+                </ng-container>
+            </tr>
+        </table>
+        <br>
+        <div class="paginator">
+            <mat-paginator [length]="layerList.length"
+                (page)="handlePageEvent($event)"
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10]"
+                [showFirstLastButtons]="true"
+                aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

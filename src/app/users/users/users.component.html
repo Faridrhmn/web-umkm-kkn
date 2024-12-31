@@ -1,0 +1,65 @@
+<div class="user-container">
+    <div class="card">
+        <div class="card-title">
+            <h1>Pengaturan User</h1>
+            <div class="card-button">
+                <button mat-flat-button style="background-color: #cccccc;" (click)="openDialogSearch()">
+                    <mat-icon>search</mat-icon>
+                    <span>Pencarian</span>
+                </button>
+                <button mat-flat-button style="background-color: #1cdc62;" (click)="openDialog('Tambah User Baru')">
+                    <mat-icon>add</mat-icon>
+                    <span>Tambah User</span>
+                </button>
+            </div>
+        </div>
+        <hr>
+        <table>
+            <tr>
+                <th width="6%">No</th>
+                <th width="30%">Nama Lengkap</th>
+                <th width="25%">Username</th>
+                <th width="15%">Role</th>
+                <th width="24%">Action</th>
+            </tr>
+            <tr *ngFor="let user of userList; let i = index">
+                <ng-container *ngIf="i >= pageIndex * pageSize && i < (pageIndex * pageSize) + pageSize">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ user.fullname }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.role }}</td>
+                    <td class="action">
+                        <button class="action-button" (click)="openDialogEdit(user, true)">
+                            <div>
+                                <mat-icon>visibility</mat-icon>
+                                <span>Lihat</span>   
+                            </div>
+                        </button>
+                        <button class="action-button" (click)="openDialogEdit(user, false)">
+                            <div>
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>   
+                            </div>
+                        </button>
+                        <button class="action-button" (click)="onDeleteUser(user.id)" *ngIf="user.username != 'admin'">
+                            <div>
+                                <mat-icon>delete</mat-icon>
+                                <span>Hapus</span>
+                            </div>
+                        </button>
+                    </td>
+                </ng-container>
+            </tr>
+        </table>
+        <br>
+        <div class="paginator">
+            <mat-paginator [length]="userList.length"
+                (page)="handlePageEvent($event)"
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10]"
+                [showFirstLastButtons]="true"
+                aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </div>
+</div>

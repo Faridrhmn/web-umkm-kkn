@@ -1,0 +1,132 @@
+.container {
+    width: calc(100vw - 128px);
+    height:  calc(100vh - 128px);
+    display: flex;
+    align-items: center;
+    background-image: url("/assets/images/bg2.png");
+    background-position: center;
+    background-size: cover;
+    padding: 64px;
+    flex-direction: column;
+    overflow-y: scroll;
+    gap: 32px;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.827);
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card2 {
+    background-color: rgba(255, 255, 255, 0.827);
+    border-radius: 12px;
+    width: calc(100% - 128px);
+    padding: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.social {
+    display: flex;
+    gap: 6px;
+}
+
+.content-info {
+    padding: 64px;
+}
+
+.content-info img{
+    width: 60%;
+}
+
+.content-info h1 {
+    margin-block: 32px;
+}
+
+.content-info button {
+    background-color: #288dc3;
+    color: white;
+    font-size: 24px;
+    border: 0;
+    outline: 0;
+    padding: 16px 32px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.content-info button:hover {
+    background-color: #196892;
+}
+
+.content-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 24px 0;
+}
+
+.content-img img {
+    width: 90%;
+}
+
+.download-button {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card2 button {
+    background-color: #139128;
+    color: white;
+    padding: 16px;
+    font-size: 32px;
+    outline: none;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.card2 button :hover {
+    background-color: #0b6e1c;
+}
+
+@media only screen and (max-width: 768px) {
+    .container {
+        width: calc(100vw - 48px);
+        height:  calc(100vh - 48px);
+        padding: 24px;
+    }
+
+    .card {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .content-info img{
+        width: 100%;
+    }
+
+    .content-img {
+        padding-top: 0;
+    }
+
+    .content-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .content-info h1 {
+        text-align: center;
+    }
+
+    .download-button {
+        grid-template-columns: 1fr;
+    }
+}

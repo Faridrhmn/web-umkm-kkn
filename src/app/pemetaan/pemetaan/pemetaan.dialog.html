@@ -1,0 +1,417 @@
+<div [className]="data.isCategory ? 'card modal-card-normal' : 'card modal-card-big'">
+    <div id="card-top">
+        <div class="card-title">
+            <h1>{{ data.title }}</h1>
+            <mat-icon mat-dialog-close class="modal-close-button">close</mat-icon>
+        </div>
+    
+        <hr>
+        <br>
+    </div>
+
+    <div class="modal-content" *ngIf="data.isCategory">
+        <div class="modal-content-form" [formGroup]="categoryFrom">
+            <mat-form-field appearance="fill">
+                <mat-label>Nama Ketegori</mat-label>
+                <input matInput placeholder="Nama Ketegori" formControlName="name">
+                <mat-hint></mat-hint>
+            </mat-form-field>
+
+            <button mat-flat-button color="primary" (click)="onUpdateCategory()">SIMPAN</button>
+        </div>
+    </div>
+
+    <div class="modal-content" *ngIf="!data.isCategory && !data.isShowDetailLocation">
+        <div class="modal-content-form" [formGroup]="locationForm">
+            <div class="form-container" id="form-container">
+                <div class="form-left">
+                    <div class="location">
+                        <span>Titik Lokasi : </span>
+                        <span>{{ data.position.lat + (data.position.lat! < 0 ? '°S' : '°N') + ','}}</span>
+                        <span>{{ data.position.lng + (data.position.lng! < 0 ? '°W' : '°E') }}</span>
+                    </div>
+        
+                    <mat-form-field appearance="fill" class="location-form">
+                        <mat-label>Nama Lokasi</mat-label>
+                        <input matInput placeholder="Nama Lokasi" formControlName="name">
+                    </mat-form-field>
+        
+                    <div class="add_category">
+                        <span>Kategori</span>
+                        <div class="add_category_field">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Pilih Kategori</mat-label>
+                                <mat-select (valueChange)="onCategorySelected($event)">
+                                  <ng-container *ngFor="let category of categoryList">
+                                    <mat-option [value]="category.id">{{ category.name }}</mat-option>
+                                  </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                            <button mat-flat-button color="primary" (click)="onAddCategory()" [disabled]="disableCategoryButton">Tambah</button>
+                        </div>
+                        <div class="category-selected-list" *ngIf="locationForm.value.category.length > 0">
+                            <span *ngFor="let c of locationForm.value.category; let i = index" class="category-selected">
+                                <div class="category-selected-child">
+                                    <span>{{ c.name }}</span>
+                                    <mat-icon (click)="onRemoveCategory(c)">cancel</mat-icon>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+
+                    <mat-form-field appearance="fill" class="location-form">
+                        <mat-label>Deskripsi Lokasi</mat-label>
+                        <textarea matInput placeholder="Deskripsi Lokasi" formControlName="description" cols="6"></textarea>
+                    </mat-form-field>
+
+                    <div class="add-items">
+                        <span>Menu/Barang Yang Dijual</span>
+                        <div class="add-items-field">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Nama Makanan/Barang</mat-label>
+                                <input matInput placeholder="Nama Makanan/Barang" (keyup)="onItemChanged($event, 'item')" required #nameItem>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" floatLabel="always">
+                                <mat-label>Kisaran Harga</mat-label>
+                                <input matInput placeholder="0" type="number" (keyup)="onItemChanged($event, 'price')" #priceItem>
+                                <span matTextPrefix>Rp&nbsp;</span>
+                            </mat-form-field>
+                        </div>
+                        <div class="add-items-field">
+                            <div class="image-item-preview">
+                                <img src="/assets/images/placeholder.png" width="100%" height="100%" id="item-image-preview" (click)="openDialogImage('item-image-preview')">
+                                <input type="file" accept="image/*" style="display: none;" id="item-image" (change)="onItemImageChange($event)">
+                            </div>
+                            <button mat-flat-button color="primary" (click)="onAddImageItem()">{{ isItemHasImage ? 'Hapus Foto' : 'Upload Foto Makanan/Barang' }}</button>
+                            <button mat-flat-button color="primary" [disabled]="disableItemsButton" (click)="onAddItem(nameItem, priceItem)">Tambah</button>
+                        </div>
+                        <div class="item-selected-list" *ngIf="locationForm.value.items.length > 0">
+                            <span *ngFor="let l of locationForm.value.items; let i = index" class="item-selected">
+                                <div class="item-selected-child">
+                                    <div class="item-selected-image">
+                                        <img [src]="l.src" 
+                                                alt="" 
+                                                *ngIf="l.src != ''" 
+                                                width="100%" height="100%" 
+                                                id="item-image-preview-a{{i}}"
+                                                (click)="openDialogImage('item-image-preview-a' + i)">
+                                        <img src="/assets/images/placeholder.png" 
+                                            alt="" 
+                                            *ngIf="l.src == ''" 
+                                            width="100%" height="100%" 
+                                            id="item-image-preview-b{{i}}"
+                                            (click)="openDialogImage('item-image-preview=b' + i)">
+                                    </div>
+                                    <div>
+                                        <span>{{ l.item }}</span><br>
+                                        <span>{{ (l.price == 'Gratis' ? '' : 'Rp ') + l.price }}</span>
+                                    </div>
+                                    <mat-icon (click)="onRemoveItem(l)">cancel</mat-icon>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <mat-form-field appearance="fill" class="location-form">
+                        <mat-label>Nomor Telepon</mat-label>
+                        <input matInput placeholder="Nomor Telepon" formControlName="phone">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="location-form">
+                        <mat-label>Alamat Lengkap</mat-label>
+                        <textarea matInput placeholder="Alamat Lengkap" formControlName="address" cols="6"></textarea>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-right">
+                    <div class="add-schedule">
+                        <span style="font-size: 1.2em; font-weight: bold;">Hari dan Jam Buka</span>
+                        <span>Rentang Hari</span>
+                        <mat-checkbox (change)="onChangeDayRangeSelected($event)" *ngIf="isSelectOnDayVisible">Pilih hanya 1 hari</mat-checkbox>
+                        <div class="add-schedule-field">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Pilih Hari</mat-label>
+                                <mat-select [required]="true" #day (valueChange)="onDayValueChange(day)" [value]="startDay">
+                                    <ng-container *ngFor="let day of dayListStart">
+                                        <mat-option [value]="day" *ngIf="day != ''">{{ day }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <span *ngIf="!isSelectOneDay">Sampai</span>
+
+                            <mat-form-field appearance="fill" *ngIf="!isSelectOneDay">
+                                <mat-label>Pilih Hari</mat-label>
+                                <mat-select [required]="true" #dayF (valueChange)="onDayFinishValueChange(dayF)" [value]="finishDay" [disabled]="isFinishDayDisable">
+                                    <ng-container *ngFor="let day of dayListFinish">
+                                        <mat-option [value]="day" *ngIf="day != ''">{{ day }}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div style="border-bottom: 1px solid gray;"></div>
+                        <span>Jam Buka</span>
+                        <mat-radio-group value="custom" (change)="onChangeHourSelected($event)">
+                            <mat-radio-button value="Buka 24 Jam">24 Jam</mat-radio-button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button value="Libur">Libur</mat-radio-button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button value="custom">Lainnya</mat-radio-button>
+                        </mat-radio-group>
+                        <div [style]="(isSelectOtherHour) ? {display: 'block'} : {display: 'none'}">
+                            <div class="add-schedule-field" style="margin-bottom: 16px;">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Jam Buka</mat-label>
+                                    <mat-select [required]="true" 
+                                        value="00"
+                                        #hourOpen [disabled]="disableHourSelect"
+                                        (valueChange)="onValueOtherHourChange(hourOpen, hourClose, minuteOpen, minuteClose)">
+                                        <ng-container *ngFor="let hour of hourList">
+                                            <mat-option [value]="(hour < 10) ? '0' + hour.toString() : hour.toString()">
+                                                {{ (hour < 10) ? '0' + hour.toString() : hour.toString() }}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Menit Buka</mat-label>
+                                    <mat-select [required]="true" 
+                                        value="00"
+                                        #minuteOpen [disabled]="disableHourSelect"
+                                        (valueChange)="onValueOtherHourChange(hourOpen, hourClose, minuteOpen, minuteClose)">
+                                        <ng-container *ngFor="let minute of minuteList">
+                                            <mat-option [value]="(minute < 10) ? '0' + minute.toString() : minute.toString()">
+                                                {{ (minute < 10) ? '0' + minute.toString() : minute.toString() }}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="add-schedule-field">
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Jam Tutup</mat-label>
+                                    <mat-select [required]="true" 
+                                        value="00"
+                                        #hourClose [disabled]="disableHourSelect"
+                                        (valueChange)="onValueOtherHourChange(hourOpen, hourClose, minuteOpen, minuteClose)">
+                                        <ng-container *ngFor="let hour of hourList">
+                                            <mat-option [value]="(hour < 10) ? '0' + hour.toString() : hour.toString()">
+                                                {{ (hour < 10) ? '0' + hour.toString() : hour.toString() }}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Menit Tutup</mat-label>
+                                    <mat-select [required]="true" 
+                                        value="00"
+                                        #minuteClose [disabled]="disableHourSelect"
+                                        (valueChange)="onValueOtherHourChange(hourOpen, hourClose, minuteOpen, minuteClose)">
+                                        <ng-container *ngFor="let minute of minuteList">
+                                            <mat-option [value]="(minute < 10) ? '0' + minute.toString() : minute.toString()">
+                                                {{ (minute < 10) ? '0' + minute.toString() : minute.toString() }}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <button mat-flat-button 
+                            color="primary" 
+                            [disabled]="disableScheduleButton"
+                            (click)="onAddSchedule(day, hourOpen, hourClose, minuteOpen, minuteClose)">
+                            Tambah
+                        </button>
+                        <div class="category-selected-list" *ngIf="locationForm.value.openDays.length > 0">
+                            <span *ngFor="let o of locationForm.value.openDays; let i = index" class="category-selected">
+                                <div class="category-selected-child" *ngIf="o.hour != ''">
+                                    <span>{{ o.day + ' ' + o.hour }}</span>
+                                    <mat-icon (click)="onRemoveSchedule(o)">cancel</mat-icon>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="add-items">
+                        <span>Tambah Foto/Gambar Lain</span>
+                        <div class="add-items-field">
+                            <div class="image-item-preview">
+                                <img src="/assets/images/placeholder.png" width="100%" height="100%" id="other-image-preview" (click)="openDialogImage('other-image-preview')">
+                                <input type="file" accept="image/*" style="display: none;" id="other-image" (change)="onOtherImageChange($event)">
+                            </div>
+                            <button mat-flat-button color="primary" (click)="onAddImageOther()">{{ isOtherImageHasImage ? 'Hapus Foto' : 'Upload Foto/Gambar' }}</button>
+                            <button mat-flat-button color="primary" [disabled]="!isOtherImageHasImage" (click)="onAddOtherImage()">Tambah</button>
+                        </div>
+                        <div class="item-selected-list" *ngIf="locationForm.value.imageUrl.length > 0">
+                            <span *ngFor="let im of locationForm.value.imageUrl; let i = index" class="item-selected">
+                                <div class="item-selected-child">
+                                    <div class="item-selected-image">
+                                        <img [src]="im.url" 
+                                                *ngIf="im.url != ''" 
+                                                width="100%" height="100%" 
+                                                id="other-image-preview-a{{i}}"
+                                                (click)="openDialogImage('other-image-preview-a' + i)">
+                                        <img src="/assets/images/placeholder.png" 
+                                            *ngIf="im.url == ''" 
+                                            width="100%" height="100%" 
+                                            id="other-image-preview-b{{i}}"
+                                            (click)="openDialogImage('other-image-preview=b' + i)">
+                                    </div>
+                                    <mat-icon (click)="onRemoveOtherImage(im)">cancel</mat-icon>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button mat-flat-button color="primary" (click)="onUpdateLocation()" id="card-bottom">SIMPAN</button>
+        </div>
+    </div>
+
+    <div class="modal-content" *ngIf="data.isShowDetailLocation">
+        <div class="modal-content-detail">
+            <table>
+                <tr></tr>
+                <tr>
+                    <th width="20%">Titik Koordinat</th>
+                    <td width="1px">:</td>
+                    <td>
+                        <div>
+                            <span>{{ data.location.position.lat + (data.location.position.lat! < 0 ? '°S' : '°N') + ','}}</span>
+                            <span>{{ data.location.position.lng + (data.location.position.lng! < 0 ? '°W' : '°E') }}</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="20%">Nama Titik Lokasi</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.location.name }}</td>
+                </tr>
+                <tr>
+                    <th width="20%">Kategori</th>
+                    <td width="1px">:</td>
+                    <td>
+                        <div class="category-selected-list">
+                            <span *ngFor="let c of data.location.category; let i = index" class="category-selected category-selected-mb">
+                                <div class="category-selected-child" style="margin-bottom: 0;">
+                                    <span>{{ c.name }}</span>
+                                </div>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="20%">Deskripsi</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.location.description }}</td>
+                </tr>
+                <tr>
+                    <th width="20%">Menu/Barang Yang Dijual</th>
+                    <td width="1px">:</td>
+                    <td>
+                        <div class="category-selected-list">
+                            <span *ngFor="let l of data.location.items; let i = index" class="item-selected category-selected-mb">
+                                <div class="item-selected-child" style="margin-bottom: 0;">
+                                    <div class="item-selected-image">
+                                        <img [src]="l.src" 
+                                            alt="" 
+                                            *ngIf="l.src != ''" 
+                                            width="100%" height="100%" 
+                                            id="item-image-preview-a{{i}}"
+                                            (click)="openDialogImage('item-image-preview-a' + i)">
+                                        <img src="/assets/images/placeholder.png" 
+                                            alt="" 
+                                            *ngIf="l.src == ''" 
+                                            width="100%" height="100%" 
+                                            id="item-image-preview-b{{i}}"
+                                            (click)="openDialogImage('item-image-preview-b' + i)">
+                                    </div>
+                                    <div>
+                                        <span>{{ l.item }}</span><br>
+                                        <span>{{ (l.price == 'Gratis' ? '' : 'Rp ') + l.price }}</span>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="20%">Nomor Telepon</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.location.phone }}</td>
+                </tr>
+                <tr>
+                    <th width="20%">Hari dan Jam Buka</th>
+                    <td width="1px">:</td>
+                    <td>
+                        <div class="category-selected-list">
+                            <span *ngFor="let o of data.location.openDays; let i = index" class="category-selected category-selected-mb">
+                                <div class="category-selected-child" *ngIf="o.hour != ''" style="margin-bottom: 0;">
+                                    <span>{{ o.day + ' ' + o.hour }}</span>
+                                </div>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="20%">Foto/Gambar Lain</th>
+                    <td width="1px">:</td>
+                    <td>
+                        <div class="item-selected-list">
+                            <span *ngFor="let im of data.location.imageUrl; let i = index" class="item-selected">
+                                <div class="item-selected-child" style="margin-bottom: 0;">
+                                    <div class="item-selected-image">
+                                        <img [src]="im.url" 
+                                                *ngIf="im.url != ''" 
+                                                width="100%" height="100%" 
+                                                id="other-image-preview-a{{i}}"
+                                                (click)="openDialogImage('other-image-preview-a' + i)">
+                                        <img src="/assets/images/placeholder.png" 
+                                            *ngIf="im.url == ''" 
+                                            width="100%" height="100%" 
+                                            id="other-image-preview-b{{i}}"
+                                            (click)="openDialogImage('other-image-preview=b' + i)">
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="20%">User Pembuat</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.location.user.fullname }}</td>
+                </tr>
+                <tr>
+                    <th width="20%">Terakhir Diupdate</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.location.lastUpdate }}</td>
+                </tr>
+                <tr>
+                    <th width="20%">Total Favorit</th>
+                    <td width="1px">:</td>
+                    <td>{{ data.location.totalFav }}</td>
+                </tr>
+                <tr>
+                    <th width="20%">Rating</th>
+                    <td width="1px">:</td>
+                    <td>{{ ratingRound(data.location.rating) }}</td>
+                </tr>
+                <tr>
+                    <th width="20%">Review</th>
+                    <td width="1px">:</td>
+                    <td>
+                        <div class="category-selected-list">
+                            <span *ngFor="let r of data.location.review;" class="category-selected category-selected-mb">
+                                <div class="rating-list" style="margin-bottom: 0;">
+                                    <b>{{ r.name + " [⭐ " + r.rating + "]" }}</b>
+                                    <div class="rating-text">
+                                        <span>{{ (r.review == "") ? "-" : r.review }}</span>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+<div class="root" (window:resize)="onResize($event)">
+    <div [ngClass]="sidenavClass">
+        <div class="sidenav-user">
+            <div class="sidenav-user-avatar">
+                <img src="/assets/images/user.png" alt="">
+            </div>
+            <div class="sidenav-user-info">
+                <h3>{{ user.fullname }}</h3>
+                <p>{{ user.role }}</p>
+            </div>
+        </div>
+        <div class="sidenav-wrapper">
+            <div [ngClass]="sidenavContent">
+                <div class="sidenav-content-wrapper" (click)="onSidenavContentClick('')">
+                    <div class="sidenav-content-button">
+                        <button mat-icon-button class="example-icon favorite-icon">
+                            <mat-icon>home</mat-icon>
+                        </button>
+                    </div>
+                    <span>Dashboard</span>
+
+                    <div class="sidenav-dropdown">
+                        <div class="sidenav-dropdown-content">Dashboard</div>
+                    </div>
+                </div>
+            </div>
+            <div [ngClass]="sidenavContent">
+                <div class="sidenav-content-wrapper" (click)="openDropdown($event)">
+                    <div class="sidenav-content-button">
+                        <button mat-icon-button class="example-icon favorite-icon">
+                            <mat-icon>maps</mat-icon>
+                        </button>
+                    </div>
+                    <div class="sidenav-content-label">
+                        <span>Pemetaan</span>
+                        <mat-icon class="label-arrow">chevron_left</mat-icon>
+                    </div>
+                    <div class="sidenav-dropdown">
+                        <div class="sidenav-dropdown-title">Pemetaan</div>
+                        <div class="sidenav-dropdown-content" (click)="onSidenavContentClick('pemetaan')">Pemetaan UKM & UMKM</div>
+                        <div class="sidenav-dropdown-content" (click)="onSidenavContentClick('map-setting')" *ngIf="user.role == 'admin'">Pengaturan Peta</div>
+                    </div>
+                </div>
+
+                <div class="sidenav-content-dropdown">
+                    <div (click)="onSidenavContentClick('pemetaan')">
+                        <span class="spacer"></span>
+                        <span>Pemetaan UKM & UMKM</span>
+                    </div>
+                    <div (click)="onSidenavContentClick('map-setting')" *ngIf="user.role == 'admin'">
+                        <span class="spacer"></span>
+                        <span>Pengaturan Peta</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div [ngClass]="sidenavContent">
+                <div class="sidenav-content-wrapper" (click)="openDropdown($event)">
+                    <div class="sidenav-content-button">
+                        <button mat-icon-button class="example-icon favorite-icon">
+                            <mat-icon>settings</mat-icon>
+                        </button>
+                    </div>
+                    <div class="sidenav-content-label">
+                        <span>Pengaturan</span>
+                        <mat-icon class="label-arrow">chevron_left</mat-icon>
+                    </div>
+                    <div class="sidenav-dropdown">
+                        <div class="sidenav-dropdown-title">Pengaturan</div>
+                        <div class="sidenav-dropdown-content" 
+                            (click)="onSidenavContentClick('users')"
+                            *ngIf="user.role == 'admin'">
+                            User
+                        </div>
+                        <div class="sidenav-dropdown-content" (click)="onSidenavContentClick('profile')">Profil</div>
+                    </div>
+                </div>
+
+                <div class="sidenav-content-dropdown">
+                    <div (click)="onSidenavContentClick('users')" *ngIf="user.role == 'admin'">
+                        <span class="spacer"></span>
+                        <span>User</span>
+                    </div>
+                    <div (click)="onSidenavContentClick('profile')">
+                        <span class="spacer"></span>
+                        <span>Profil</span>
+                    </div>
+                </div>
+            </div>
+
+            <div [ngClass]="sidenavContent">
+                <div class="sidenav-content-wrapper" (click)="onSidenavContentClick('tanggapan')">
+                    <div class="sidenav-content-button">
+                        <button mat-icon-button class="example-icon favorite-icon">
+                            <mat-icon>reviews</mat-icon>
+                        </button>
+                    </div>
+                    <span>Tanggapan Pengguna</span>
+
+                    <div class="sidenav-dropdown">
+                        <div class="sidenav-dropdown-content">Tanggapan Pengguna</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="root-content">
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <button mat-icon-button (click)="togleSidenav()" matTooltip="Menu" [matTooltipShowDelay]="400">
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </div>
+            <div class="toolbar-right">
+                <button mat-icon-button [matMenuTriggerFor]="beforeMenu" matTooltip="Notifikasi" [matTooltipShowDelay]="400">
+                    <div class="notification-alert"></div>
+                    <mat-icon>notifications</mat-icon>
+                </button>
+                <mat-menu #beforeMenu="matMenu" xPosition="before">
+                    <div class="notification">
+                        <span>Tidak ada notifikasi</span>
+                    </div>
+                </mat-menu>
+                <button mat-icon-button (click)="logout()" matTooltip="Logout" [matTooltipShowDelay]="400">
+                    <mat-icon>logout</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="root-content-container">
+            <app-dashboard *ngIf="content == '/'"></app-dashboard>
+            <app-padukuhan *ngIf="content == '/padukuhan'"></app-padukuhan>
+            <app-users *ngIf="content == '/users'"></app-users>
+            <app-profile *ngIf="content == '/profile'"></app-profile>
+            <app-pengajuan *ngIf="content == '/pengajuan'"></app-pengajuan>
+            <app-detail *ngIf="content == '/pengajuan/detail'"></app-detail>
+            <app-pemetaan *ngIf="content ==  '/pemetaan'"></app-pemetaan>
+            <app-map-setting *ngIf="content ==  '/map-setting'"></app-map-setting>
+            <app-tanggapan *ngIf="content == '/tanggapan'"></app-tanggapan>
+        </div>
+        <div class="root-footer">Copyright © 2024 - KKN AA.18.125.KBM</div>
+    </div>
+</div>

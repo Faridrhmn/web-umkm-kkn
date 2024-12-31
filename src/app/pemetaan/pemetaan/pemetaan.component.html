@@ -1,0 +1,130 @@
+<div class="pemetaan-container">
+    <div class="card">
+        <div class="card-title">
+            <h1>Titik Lokasi UKM & UMKM</h1>
+            <div class="card-button">
+                <button mat-flat-button style="background-color: #cccccc;" *ngIf="isSetLoc" (click)="toggleSetLocPin()">
+                    <mat-icon>cancel</mat-icon>
+                    <span>Batal</span>
+                </button>
+                <button mat-flat-button style="background-color: #cccccc;" *ngIf="!isSetLoc" (click)="openDialogSearch()">
+                    <mat-icon>search</mat-icon>
+                    <span>Pencarian</span>
+                </button>
+                <button mat-flat-button 
+                        style="background-color: #1cdc62;" 
+                        (click)="openDialog('add_location', 'Tambah Lokasi Baru', null, null)"
+                        *ngIf="isSetLoc"
+                        [disabled]="disableAddDetailButton">
+                    <mat-icon>description</mat-icon>
+                    <span>Isi Detail UKM & UMKM</span>
+                </button>
+                <button mat-flat-button 
+                        style="background-color: #1cdc62;" 
+                        (click)="toggleSetLocPin()"
+                        *ngIf="!isSetLoc">
+                    <mat-icon>add</mat-icon>
+                    <span>Tambah UKM & UMKM</span>
+                </button>
+            </div>
+        </div>
+        <hr>
+        <div class="map" id="mapEle"></div>
+        
+        <br>
+    </div>
+
+    <br>
+
+    <div class="pemetaan-list">
+        <div class="card">
+            <div class="card-title">
+                <h1>Kategori</h1>
+                <div class="card-button">
+                    <button mat-flat-button style="background-color: #1cdc62;" (click)="openDialog('add_category', 'Tambah Kategori', null, null)">
+                        <mat-icon>add</mat-icon>
+                        <span>Tambah Kategori</span>
+                    </button>
+                </div>
+            </div>
+            <hr>
+
+            <table>
+                <tr>
+                    <th width="10%">No</th>
+                    <th width="60%">Nama Kategori</th>
+                    <th width="30%">Action</th>
+                </tr>
+                <tr *ngFor="let category of categoryList; let i = index">
+                    <ng-container *ngIf="i >= pageIndex * pageSize && i < (pageIndex * pageSize) + pageSize">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ category.name }}</td>
+                        <td class="action">
+                            <div class="action-icon">
+                                <mat-icon (click)="openDialog('edit_category', 'Edit Kategori', category, null)" matTooltip="Edit" [matTooltipShowDelay]="400">edit</mat-icon>
+                                <mat-icon (click)="onDeleteCategory(category.id)" matTooltip="Hapus" [matTooltipShowDelay]="400">delete</mat-icon>
+                            </div>
+                        </td>
+                    </ng-container>
+                </tr>
+            </table>
+            
+            <br>
+
+            <div class="paginator">
+                <mat-paginator [length]="categoryList.length"
+                    (page)="handlePageEvent($event)"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10]"
+                    [showFirstLastButtons]="true"
+                    aria-label="Select page">
+                </mat-paginator>
+            </div>
+        </div>
+    
+        <div class="card">
+            <div class="card-title">
+                <h1>Daftar UKM & UMKM</h1>
+                
+            </div>
+            <hr>
+            
+            <table>
+                <tr>
+                    <th width="8%">No</th>
+                    <th width="36%">Nama UKM & UMKM</th>
+                    <th width="36%">Kategori</th>
+                    <th width="20%">Action</th>
+                </tr>
+                <tr *ngFor="let location of locationList; let i = index">
+                    <ng-container *ngIf="i >= pageIndex2 * pageSize2 && i < (pageIndex2 * pageSize2) + pageSize">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ location.name }}</td>
+                        <td>
+                            <ng-container *ngFor="let category of location.category; let j = index">
+                                <span>{{ category.name }}</span><span *ngIf="j < location.category.length - 1">, </span>
+                            </ng-container>
+                        </td>
+                        <td class="action">
+                            <div class="action-icon">
+                                <mat-icon id="action-view" (click)="openDialog('detail_location', 'Detail Titik Lokasi', null, location)" matTooltip="Lihat" [matTooltipShowDelay]="400">visibility</mat-icon>
+                                <mat-icon id="action-edit" (click)="openDialog('edit_location', 'Edit Titik Lokasi', null, location)" matTooltip="Edit" [matTooltipShowDelay]="400">edit</mat-icon>
+                                <mat-icon id="action-delete" (click)="onDeleteLocation(location.id)" matTooltip="Hapus" [matTooltipShowDelay]="400">delete</mat-icon>
+                            </div>
+                        </td>
+                    </ng-container>
+                </tr>
+            </table>
+            <br>
+            <div class="paginator">
+                <mat-paginator [length]="locationList.length"
+                    (page)="handlePageEvent2($event)"
+                    [pageSize]="5"
+                    [pageSizeOptions]="[5, 10]"
+                    [showFirstLastButtons]="true"
+                    aria-label="Select page">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

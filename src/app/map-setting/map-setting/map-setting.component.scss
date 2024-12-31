@@ -1,0 +1,126 @@
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+* :not(mat-icon) {
+    font-family: 'Ubuntu', "Helvetica Neue", sans-serif;
+}
+
+.card {
+    background-color: white;
+    padding: 16px;
+    border-top: 6px solid #39728A;
+    border-radius: 6px;
+}
+
+.card-title {
+    margin-block: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-button {
+    display: flex;
+    gap: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: start;
+}
+
+th, td {
+    padding: 16px 8px;
+}
+
+tr:hover {
+    background-color: #efefef;
+}
+
+tr:first-child:hover{
+    background-color:transparent;
+}
+
+.add-button {
+    background-color: #39728A;
+}
+
+.action-button {
+    margin-right: 12px;
+    margin-block: 6px;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    
+}
+
+.action-button span {
+    font-size: 13px;
+}
+
+.action-button div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-button mat-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+}
+
+.map {
+    width: 100%;
+    height: 50vh;
+}
+
+.layer-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 12px;
+    margin-right: 12px;
+    display: inline-block;
+}
+
+
+
+
+
+
+// MODAL
+.modal-card {
+    width: 32vw;
+    background-color: white;
+    padding: 16px 32px;
+    border-radius: 0;
+}
+
+.modal-close-button {
+    cursor: pointer;
+}
+
+.modal-content-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-content-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+

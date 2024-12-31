@@ -1,0 +1,39 @@
+<div class="padukuhan-container">
+    <div class="card">
+        <div class="card-title">
+            <h1>Profil User</h1>
+            <div class="card-button">
+                <button mat-flat-button style="background-color: #1cdc62;" (click)="openDialog('Edit Profile')">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit Profil</span>
+                </button>
+                <button mat-flat-button 
+                    style="background-color: #439dda;" 
+                    (click)="openDialogPassword('Ganti password')"
+                    *ngIf="user.username != 'admin'">
+                    <mat-icon>restart_alt</mat-icon>
+                    <span>Ganti Password</span>
+                </button>
+            </div>
+        </div>
+        <hr>
+        <table>
+            <tr></tr>
+            <tr>
+                <th width="20%">Nama Lengkap</th>
+                <td width="1px">:</td>
+                <td>{{ user.fullname }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td width="1px">:</td>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>Role</th>
+                <td width="1px">:</td>
+                <td>{{ user.role }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
