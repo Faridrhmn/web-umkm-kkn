@@ -1,6 +1,6 @@
 <div align="center">
  
-# Web Admin Lapak Ngaglik
+# Web Admin Lapak Tanjungrejo
 
 
 ![node](https://img.shields.io/badge/node-v18.17.1-%2383cd29)&nbsp; &nbsp;![npm version](https://img.shields.io/badge/npm-v10.1.0-%232c8ebb)&nbsp; &nbsp;![angular cli](https://img.shields.io/badge/angular-v15.2.9-%23dd0031) 
@@ -25,13 +25,13 @@ Web based administration system. Tested on Ubuntu 22.04.1 LTS
     
    - Use HTTPS
      ```bash
-     > git clone https://gitlab.com/Dywa0204/lapak-ngaglik.git
-     > cd lapak-ngaglik
+     > git clone https://github.com/Faridrhmn/web-umkm-kkn
+     > cd lapak-tanjungrejo
      ```
    - Use SSH
      ```bash
-     > git clone git@gitlab.com:Dywa0204/lapak-ngaglik.git
-     > cd lapak-ngaglik
+     > git clone https://github.com/Faridrhmn/web-umkm-kkn
+     > cd lapak-tanjungrejo
      ```
 
 2. Install the dependencies:
