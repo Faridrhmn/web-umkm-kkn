@@ -87,21 +87,6 @@
                     </div>
                 </div>
             </div>
-
-            <div [ngClass]="sidenavContent">
-                <div class="sidenav-content-wrapper" (click)="onSidenavContentClick('tanggapan')">
-                    <div class="sidenav-content-button">
-                        <button mat-icon-button class="example-icon favorite-icon">
-                            <mat-icon>reviews</mat-icon>
-                        </button>
-                    </div>
-                    <span>Tanggapan Pengguna</span>
-
-                    <div class="sidenav-dropdown">
-                        <div class="sidenav-dropdown-content">Tanggapan Pengguna</div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -129,14 +114,10 @@
         </div>
         <div class="root-content-container">
             <app-dashboard *ngIf="content == '/'"></app-dashboard>
-            <app-padukuhan *ngIf="content == '/padukuhan'"></app-padukuhan>
             <app-users *ngIf="content == '/users'"></app-users>
             <app-profile *ngIf="content == '/profile'"></app-profile>
-            <app-pengajuan *ngIf="content == '/pengajuan'"></app-pengajuan>
-            <app-detail *ngIf="content == '/pengajuan/detail'"></app-detail>
             <app-pemetaan *ngIf="content ==  '/pemetaan'"></app-pemetaan>
             <app-map-setting *ngIf="content ==  '/map-setting'"></app-map-setting>
-            <app-tanggapan *ngIf="content == '/tanggapan'"></app-tanggapan>
         </div>
         <div class="root-footer">Copyright © 2024 - KKN AA.18.125.KBM</div>
     </div>

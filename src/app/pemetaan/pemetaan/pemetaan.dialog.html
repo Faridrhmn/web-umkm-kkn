@@ -35,7 +35,16 @@
                         <mat-label>Nama Lokasi</mat-label>
                         <input matInput placeholder="Nama Lokasi" formControlName="name">
                     </mat-form-field>
-        
+
+                    <mat-form-field appearance="fill" class="location-form">
+                    <mat-label>Nama Dusun</mat-label>
+                    <mat-select formControlName="dusun">
+                        <mat-option *ngFor="let dusun of dusunList" [value]="dusun">
+                        {{ dusun }}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+
                     <div class="add_category">
                         <span>Kategori</span>
                         <div class="add_category_field">
@@ -389,27 +398,6 @@
                     <th width="20%">Total Favorit</th>
                     <td width="1px">:</td>
                     <td>{{ data.location.totalFav }}</td>
-                </tr>
-                <tr>
-                    <th width="20%">Rating</th>
-                    <td width="1px">:</td>
-                    <td>{{ ratingRound(data.location.rating) }}</td>
-                </tr>
-                <tr>
-                    <th width="20%">Review</th>
-                    <td width="1px">:</td>
-                    <td>
-                        <div class="category-selected-list">
-                            <span *ngFor="let r of data.location.review;" class="category-selected category-selected-mb">
-                                <div class="rating-list" style="margin-bottom: 0;">
-                                    <b>{{ r.name + " [⭐ " + r.rating + "]" }}</b>
-                                    <div class="rating-text">
-                                        <span>{{ (r.review == "") ? "-" : r.review }}</span>
-                                    </div>
-                                </div>
-                            </span>
-                        </div>
-                    </td>
                 </tr>
             </table>
         </div>

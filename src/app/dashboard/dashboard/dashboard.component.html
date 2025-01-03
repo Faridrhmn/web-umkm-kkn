@@ -83,30 +83,4 @@
         </div>
         
     </div>
-
-    <div class="card" *ngIf="user.role == 'admin'">
-        <div class="card-title">
-            <h1>Tanggapan Pengguna</h1>
-            <div class="card-button">
-                <button mat-flat-button style="background-color: #cccccc;" (click)="openTanggapan()">
-                    <mat-icon>rate_review</mat-icon>
-                    <span>Lihat semua</span>
-                </button>
-            </div>
-        </div>
-        <hr>
-        <div class="tanggapan-container">
-            <ng-container *ngFor="let tanggapan of tanggapanList; let i = index">
-                <div class="tanggapan-list" *ngIf="i >= 0 && i < 4">
-                    <h3 class="tanggapan-fullname">{{ tanggapan.fullname }} [{{ (tanggapan.email == "") ? "anonim" : tanggapan.email }}]</h3>
-                    <hr>
-                    <p class="tanggapan-text">{{ tanggapan.tanggapan }}</p>
-                </div>
-            </ng-container>
-
-            <div *ngIf="tanggapanList.length <= 0">
-                <h1 style="text-align: center; padding: 16px;">Belum Ada Tanggapan</h1>
-            </div>
-        </div>
-    </div>
 </div>

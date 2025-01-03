@@ -252,6 +252,7 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
           name: item.data()["name"],
           category: item.data()["category"],
           description: item.data()["description"],
+          dusun: item.data()["dusun"],
           items: item.data()["items"],
           openDays: item.data()["openDays"],
           phone: item.data()["phone"],
@@ -261,8 +262,8 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
           review: item.data()["review"],
           lastUpdate: item.data()["lastUpdate"],
           user: item.data()["user"],
-          position: item.data()["position"],
-          rating: item.data()["rating"]
+          position: item.data()["position"]
+          // rating: item.data()["rating"]
         });
       })
 
@@ -568,6 +569,7 @@ interface Location {
   name: String,
   category: Array<Category>,
   description: String,
+  dusun: String,
   items: Array<Item>,
   openDays: Array<Schedule>,
   phone: String,
@@ -581,8 +583,8 @@ interface Location {
   }>,
   lastUpdate: String,
   user: User,
-  position: Position,
-  rating: string
+  position: Position
+  // rating: string
 }
 
 interface Item {
@@ -626,6 +628,7 @@ export default class PemetaanDialogModal implements OnInit {
   dayListStart = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']; 
   dayListFinish = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
   dayListTemp = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+  dusunList: string[] = ['ganggeng', 'tinesek', 'ketileng', 'gebyog'];
   dayLength = 7; dayLengthTemp = 7;
   startDay = ''; finishDay = ''; isFinishDayDisable = true;
   selectedOtherHour = ''; isSelectOnDayVisible = true;
@@ -715,6 +718,7 @@ export default class PemetaanDialogModal implements OnInit {
         name: this.data.location.name,
         category: this.data.location.category,
         description: this.data.location.description,
+        dusun: this.data.location.dusun,
         items: this.data.location.items,
         phone: this.data.location.phone,
         address: this.data.location.address,
@@ -748,6 +752,7 @@ export default class PemetaanDialogModal implements OnInit {
       category: [[], [Validators.required]],
       items: [[]],
       description: [''],
+      dusun: [''],
       phone: [''],
       address: [''],
       imageUrl: [[]],
@@ -1171,6 +1176,8 @@ export default class PemetaanDialogModal implements OnInit {
       role: ""
     }
 
+    let dusunValue = this.locationForm.value.dusun || 'Unknown Dusun';
+    console.log('Dusun Value:', dusunValue);
     let userData = JSON.parse(localStorage.getItem('user')!);
 
     user = userData ? userData : user;
@@ -1180,6 +1187,7 @@ export default class PemetaanDialogModal implements OnInit {
       name: this.locationForm.value.name,
       category: this.locationForm.value.category,
       description: this.locationForm.value.description,
+      dusun: this.locationForm.value.dusun || 'Unknown Dusun',
       items: this.locationForm.value.items,
       openDays: this.locationForm.value.openDays,
       phone: this.locationForm.value.phone,
@@ -1189,8 +1197,8 @@ export default class PemetaanDialogModal implements OnInit {
       review: (this.data.location) ? this.data.location.review : [],
       lastUpdate: today,
       user: (this.data.location) ? this.data.location.user : user,
-      position: this.data.position,
-      rating: this.data.location ? this.data.location.rating : "0"
+      position: this.data.position
+      // rating: this.data.location ? this.data.location.rating : "0"
     }
 
     this.onStoreLocation(location)

@@ -13,22 +13,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'padukuhan',
-    loadChildren: () => import('./root/root.module').then((m) => m.RootModule),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'users',
-    loadChildren: () => import('./root/root.module').then((m) => m.RootModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'pengajuan',
-    loadChildren: () => import('./root/root.module').then((m) => m.RootModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'pengajuan/detail',
     loadChildren: () => import('./root/root.module').then((m) => m.RootModule),
     canActivate: [AuthGuard]
   },
@@ -46,19 +31,6 @@ const routes: Routes = [
     path: 'profile',
     loadChildren: () => import('./root/root.module').then((m) => m.RootModule),
     canActivate: [AuthGuard]
-  },
-  {
-    path: 'tanggapan',
-    loadChildren: () => import('./root/root.module').then((m) => m.RootModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'privacy',
-    loadChildren: () => import('./privacy/privacy.module').then((m) => m.PrivacyModule),
-  },
-  {
-    path: 'download',
-    loadChildren: () => import('./download/download.module').then((m) => m.DownloadModule)
   },
   {
     path: 'changelog',

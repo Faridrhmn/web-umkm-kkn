@@ -11,7 +11,7 @@ h1, h2, h3, h4, h5, h6, p {
 
 .dashboard-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
 }
 
@@ -31,7 +31,7 @@ h1, h2, h3, h4, h5, h6, p {
 .card {
     background-color: white;
     padding: 16px;
-    border-top: 6px solid #39728A;
+    border-top: 6px solid #265810;
     border-radius: 6px;
 }
 

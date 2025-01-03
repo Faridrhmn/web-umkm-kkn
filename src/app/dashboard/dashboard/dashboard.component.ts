@@ -4,7 +4,6 @@ import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { Transaction, addDoc, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, orderBy, query, runTransaction, setDoc, writeBatch } from 'firebase/firestore';
-import PengajuanDialogModal from 'src/app/pengajuan/pengajuan/pengajuan.component';
 import { ImagePrevDialogComponent } from 'src/app/shared/image-prev-dialog/image-prev-dialog.component';
 import { environment } from 'src/environment/environment';
 import Swal from 'sweetalert2';
