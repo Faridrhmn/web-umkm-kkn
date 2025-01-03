@@ -63,4 +63,4 @@ Web based administration system. Tested on Ubuntu 22.04.1 LTS
 
 ## Troubleshooting
 
-Make sure all the necessary dependencies are installed, contact dywa.pratama0204@gmail.com for troubleshooting
+Make sure all the necessary dependencies are installed, contact bfaridrahman@gmail.com for troubleshooting
