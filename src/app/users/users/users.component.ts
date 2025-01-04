@@ -12,7 +12,7 @@ interface User {
   fullname: String,
   role: String,
   id: string,
-  password: String
+  password: string
 }
 
 interface Search {
@@ -301,21 +301,27 @@ export default class UserDialogModal implements OnInit {
   async storeUser(userForm: User, user: User) {
     const app = initializeApp(environment.firebase);
     const db = getFirestore(app);
-    
+  
+    // Generate a token for a new user or use the existing user's ID
     const token = this.data.isAddUser ? this.generateToken(20) : user.id;
-
-    await setDoc(doc(db, "users", token), {
-      username: userForm.username,
-      fullname: userForm.fullname,
-      password: userForm.password,
-      role: userForm.role,
-      image: "",
-      // password: this.data.isAddUser ? "12345" : user.password
-    }).then(() => {
+  
+    try {
+      // Hash the password using the Web Crypto API
+      const hashedPassword = await this.hashPassword(userForm.password);
+  
+      // Store user data in Firestore
+      await setDoc(doc(db, "users", token), {
+        username: userForm.username,
+        fullname: userForm.fullname,
+        password: hashedPassword, // Save hashed password
+        role: userForm.role,
+        image: ""
+      });
+  
       this.onSuccess('Berhasil Menambah User!');
-    }).catch((reason) => {
-      console.log(reason)
-    })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //RESET PASSWORD
@@ -413,6 +419,20 @@ export default class UserDialogModal implements OnInit {
     }
 
     return result;
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    // Convert password to Uint8Array
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+  
+    // Hash the password using SHA-256
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  
+    // Convert the hash to a hexadecimal string
+    return Array.from(new Uint8Array(hashBuffer))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
   }
 
 }

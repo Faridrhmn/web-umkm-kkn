@@ -43,35 +43,40 @@ export class LoginComponent {
 
   async login() {
     const payload: Payload = this.loginForm.value;
-    if(!this.loginForm.invalid) {
+  
+    if (!this.loginForm.invalid) {
       Swal.fire({
         didOpen: () => {
-          Swal.showLoading()
+          Swal.showLoading();
         },
         title: 'Sedang Memuat...',
         text: 'Harap tunggu sebentar',
-      })
-
+      });
+  
       const app = initializeApp(environment.firebase);
       const db = getFirestore(app);
-
+  
+      // Query to find the user by username
       const q = query(collection(db, "users"), where("username", "==", payload.username));
-
       const querySnapshot = await getDocs(q);
-      
-      if(querySnapshot.size > 0) {
+  
+      if (querySnapshot.size > 0) {
+        // Hash the entered password for comparison
+        const hashedPassword = await this.hashPassword(payload.password);
+  
         querySnapshot.forEach((doc) => {
-          if(payload.password == doc.data()["password"]) {
-            this.onSuccess(doc);
+          // Compare hashed password with the stored password
+          if (hashedPassword === doc.data()["password"]) {
+            this.onSuccess(doc);  // Successful login
           } else {
-            this.onError("password");
+            this.onError("password");  // Incorrect password
           }
         });
       } else {
-        this.onError("username");
+        this.onError("username");  // Username not found
       }
     } else {
-      this.onError("null");
+      this.onError("null");  // Form is invalid
     }
   }
 
@@ -151,5 +156,16 @@ export class LoginComponent {
 
   handleKeyPress(e: String) {
     console.log(e == "\n" ? "true" : "false")
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+  
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  
+    return Array.from(new Uint8Array(hashBuffer))
+      .map((byte) => byte.toString(16).padStart(2, "0"))
+      .join("");
   }
 }
