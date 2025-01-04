@@ -251,6 +251,7 @@ export default class UserDialogModal implements OnInit {
     return this.fb.group({
       fullname: ['', [Validators.required]],
       username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
       role: ['', [Validators.required]]
     })
   }
@@ -306,9 +307,10 @@ export default class UserDialogModal implements OnInit {
     await setDoc(doc(db, "users", token), {
       username: userForm.username,
       fullname: userForm.fullname,
+      password: userForm.password,
       role: userForm.role,
       image: "",
-      password: this.data.isAddUser ? "12345" : user.password
+      // password: this.data.isAddUser ? "12345" : user.password
     }).then(() => {
       this.onSuccess('Berhasil Menambah User!');
     }).catch((reason) => {

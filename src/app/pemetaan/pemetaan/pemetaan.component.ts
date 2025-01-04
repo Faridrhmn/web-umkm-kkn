@@ -253,6 +253,9 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
           category: item.data()["category"],
           description: item.data()["description"],
           dusun: item.data()["dusun"],
+          shopee: item.data()["shopee"],
+          instagram: item.data()["instagram"],
+          facebook: item.data()["facebook"],
           items: item.data()["items"],
           openDays: item.data()["openDays"],
           phone: item.data()["phone"],
@@ -570,6 +573,9 @@ interface Location {
   category: Array<Category>,
   description: String,
   dusun: String,
+  shopee: String,
+  facebook: String,
+  instagram: String,
   items: Array<Item>,
   openDays: Array<Schedule>,
   phone: String,
@@ -719,6 +725,9 @@ export default class PemetaanDialogModal implements OnInit {
         category: this.data.location.category,
         description: this.data.location.description,
         dusun: this.data.location.dusun,
+        shopee: this.data.location.shopee,
+        facebook: this.data.location.facebook,
+        instagram: this.data.location.instagram,
         items: this.data.location.items,
         phone: this.data.location.phone,
         address: this.data.location.address,
@@ -753,6 +762,9 @@ export default class PemetaanDialogModal implements OnInit {
       items: [[]],
       description: [''],
       dusun: [''],
+      shopee: [''],
+      facebook: [''],
+      instagram: [''],
       phone: [''],
       address: [''],
       imageUrl: [[]],
@@ -1177,6 +1189,9 @@ export default class PemetaanDialogModal implements OnInit {
     }
 
     let dusunValue = this.locationForm.value.dusun || 'Unknown Dusun';
+    let shopeeValue = this.locationForm.value.shopee || '';
+    let facebookValue = this.locationForm.value.facebook || '';
+    let instagramValue = this.locationForm.value.instagram || '';
     console.log('Dusun Value:', dusunValue);
     let userData = JSON.parse(localStorage.getItem('user')!);
 
@@ -1188,6 +1203,9 @@ export default class PemetaanDialogModal implements OnInit {
       category: this.locationForm.value.category,
       description: this.locationForm.value.description,
       dusun: this.locationForm.value.dusun || 'Unknown Dusun',
+      shopee: this.locationForm.value.shopee || '',
+      facebook: this.locationForm.value.facebook || '',
+      instagram: this.locationForm.value.instagram || '',
       items: this.locationForm.value.items,
       openDays: this.locationForm.value.openDays,
       phone: this.locationForm.value.phone,
