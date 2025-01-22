@@ -80,6 +80,10 @@
                                 <mat-label>Nama Makanan/Barang</mat-label>
                                 <input matInput placeholder="Nama Makanan/Barang" (keyup)="onItemChanged($event, 'item')" required #nameItem>
                             </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Deskripsi Makanan/Barang</mat-label>
+                                <input matInput placeholder="Nama Makanan/Barang" (keyup)="onItemChanged($event, 'description')" required #descItem>
+                            </mat-form-field>
                             <mat-form-field appearance="fill" floatLabel="always">
                                 <mat-label>Kisaran Harga</mat-label>
                                 <input matInput placeholder="0" type="number" (keyup)="onItemChanged($event, 'price')" #priceItem>
@@ -92,7 +96,7 @@
                                 <input type="file" accept="image/*" style="display: none;" id="item-image" (change)="onItemImageChange($event)">
                             </div>
                             <button mat-flat-button color="primary" (click)="onAddImageItem()">{{ isItemHasImage ? 'Hapus Foto' : 'Upload Foto Makanan/Barang' }}</button>
-                            <button mat-flat-button color="primary" [disabled]="disableItemsButton" (click)="onAddItem(nameItem, priceItem)">Tambah</button>
+                            <button mat-flat-button color="primary" [disabled]="disableItemsButton" (click)="onAddItem(nameItem, priceItem, descItem)">Tambah</button>
                         </div>
                         <div class="item-selected-list" *ngIf="locationForm.value.items.length > 0">
                             <span *ngFor="let l of locationForm.value.items; let i = index" class="item-selected">
@@ -395,11 +399,6 @@
                             </span>
                         </div>
                     </td>
-                </tr>
-                <tr>
-                    <th width="20%">User Pembuat</th>
-                    <td width="1px">:</td>
-                    <td>{{ data.location.user.fullname }}</td>
                 </tr>
                 <tr>
                     <th width="20%">Terakhir Diupdate</th>

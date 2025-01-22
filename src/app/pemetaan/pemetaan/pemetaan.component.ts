@@ -53,6 +53,13 @@ interface Search {
   keyword: string,
 }
 
+interface MediaSocial {
+  shopee: string;
+  facebook: string;
+  instagram: string;
+  phone: string;
+}
+
 
 @Component({
   selector: 'app-pemetaan',
@@ -241,40 +248,72 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
   async loadLocation() {
     const app = initializeApp(environment.firebase);
     const db = getFirestore(app);
-
-    const q = query(collection(db, "location"));
-
-    onSnapshot(q, (querySnapshot) => {
-      this.locationList = [];
-      querySnapshot.forEach(async (item) => {
-        this.locationList.push({
-          id: item.id,
-          name: item.data()["name"],
-          category: item.data()["category"],
-          description: item.data()["description"],
-          dusun: item.data()["dusun"],
-          shopee: item.data()["shopee"],
-          instagram: item.data()["instagram"],
-          facebook: item.data()["facebook"],
-          items: item.data()["items"],
-          openDays: item.data()["openDays"],
-          phone: item.data()["phone"],
-          address: item.data()["address"],
-          imageUrl: item.data()["imageUrl"],
-          totalFav: item.data()["totalFav"],
-          review: item.data()["review"],
-          lastUpdate: item.data()["lastUpdate"],
-          user: item.data()["user"],
-          position: item.data()["position"]
-          // rating: item.data()["rating"]
-        });
-      })
-
-      this.locationListTemp = this.locationList;
-      this.drawLocationMarker()
-    })
-
-    return(false);
+  
+    // Temporary storage for data from both collections
+    let umkmData = new Map();
+    let productData = new Map();
+  
+    // Listen to list_umkm collection
+    onSnapshot(query(collection(db, "list_umkm")), (umkmSnapshot) => {
+      umkmSnapshot.forEach((doc) => {
+        const data = doc.data();
+        umkmData.set(doc.id, data);
+        this.updateLocationList(doc.id, umkmData, productData);
+      });
+    });
+  
+    // Listen to product collection
+    onSnapshot(query(collection(db, "product")), (productSnapshot) => {
+      productSnapshot.forEach((doc) => {
+        const data = doc.data();
+        productData.set(doc.id, data);
+        this.updateLocationList(doc.id, umkmData, productData);
+      });
+    });
+  
+    return false;
+  }
+  
+  private updateLocationList(id: string, umkmData: Map<string, any>, productData: Map<string, any>) {
+    // Only proceed if we have data from both collections for this ID
+    if (umkmData.has(id) && productData.has(id)) {
+      const umkm = umkmData.get(id);
+      const product = productData.get(id);
+  
+      // Find existing location index
+      const existingIndex = this.locationList.findIndex(loc => loc.id === id);
+  
+      // Create combined location object
+      const location = {
+        id: id,
+        name: umkm.name,
+        category: umkm.category,
+        description: umkm.description,
+        dusun: umkm.dusun,
+        shopee: umkm.media_social?.shopee || '',
+        instagram: umkm.media_social?.instagram || '',
+        facebook: umkm.media_social?.facebook || '',
+        phone: umkm.media_social?.phone || '',
+        items: product.items || [],
+        openDays: umkm.openDays,
+        address: umkm.address,
+        imageUrl: umkm.imageUrl,
+        totalFav: umkm.totalFav,
+        lastUpdate: umkm.lastUpdate,
+        position: umkm.position
+      };
+  
+      // Update or add the location
+      if (existingIndex !== -1) {
+        this.locationList[existingIndex] = location;
+      } else {
+        this.locationList.push(location);
+      }
+  
+      // Update temp list and redraw markers
+      this.locationListTemp = [...this.locationList];
+      this.drawLocationMarker();
+    }
   }
 
   drawLocationMarker() {
@@ -310,37 +349,66 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
 
   //ON DELETE LOCATION
   async onDeleteLocation(locationId: string) {
-    Swal.fire({
+    // Tampilkan dialog konfirmasi
+    const confirmation = await Swal.fire({
       title: 'Yakin ingin menghapus titik lokasi?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Ya',
-      cancelButtonText: 'Tidak'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const app = initializeApp(environment.firebase);
-        const db = getFirestore(app);
-
-        Swal.close()
+      cancelButtonText: 'Tidak',
+    });
+  
+    if (confirmation.isConfirmed) {
+      // Inisialisasi Firebase Firestore
+      const app = initializeApp(environment.firebase);
+      const db = getFirestore(app);
+  
+      try {
+        // Tampilkan loading Swal
         Swal.fire({
-          didOpen: () => {
-            Swal.showLoading()
-          },
           title: 'Sedang Menghapus...',
           text: 'Harap tunggu sebentar',
-        })
-
-        await deleteDoc(doc(db, "location", locationId)).then(() => {
-          this.onSuccess('Berhasil Menghapus Titik Lokasi!')
-          this.ngAfterContentInit()
-        }).catch(reason => {
-          this.onError("delete_location");
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
         });
+  
+        // Hapus dokumen di koleksi "list_umkm"
+        await deleteDoc(doc(db, "list_umkm", locationId));
+  
+        // Hapus dokumen di koleksi "product"
+        await deleteDoc(doc(db, "product", locationId));
+  
+        // Berhasil menghapus
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'Titik lokasi berhasil dihapus!',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+  
+        // Muat ulang data (gunakan metode yang sesuai dengan aplikasi Anda)
+        this.ngAfterContentInit();
+      } catch (error) {
+        console.error("Error deleting location:", error);
+  
+        // Tampilkan pesan error
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Terjadi kesalahan saat menghapus titik lokasi. Silakan coba lagi.',
+        });
+  
+        this.onError("delete_location");
       }
-    })
+    }
   }
+  
 
 
 
@@ -539,14 +607,14 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
 
       this.locationListTemp.forEach(item => {
         const condition1 = item.name.toLowerCase().includes(search.keyword);
-        const condition2 = item.user.fullname.toLowerCase().includes(search.keyword);
+        // const condition2 = item.user.fullname.toLowerCase().includes(search.keyword);
         let condition3 = false;
 
         item.category.forEach(category => {
           if(category.name.toLowerCase().includes(search.keyword)) condition3 = true;
         })
         
-        if(condition1 || condition2 || condition3) {
+        if(condition1 || condition3) {
           this.locationList.push(item);
         }
       })
@@ -582,21 +650,15 @@ interface Location {
   address: String,
   imageUrl: Array<ImageUrl>,
   totalFav: number,
-  review: Array<{
-    name: string,
-    rating: number,
-    review: string
-  }>,
   lastUpdate: String,
-  user: User,
   position: Position
-  // rating: string
 }
 
 interface Item {
   id: String,
   item: String,
   price: String,
+  description_product: String,
   src: string,
   fav: boolean
 }
@@ -612,11 +674,11 @@ interface Schedule {
   id: string
 }
 
-interface User {
-  username: String,
-  fullname: String,
-  role: String
-}
+// interface User {
+//   username: String,
+//   fullname: String,
+//   role: String
+// }
 
 @Component({
   selector: 'pemetaan-modal',
@@ -655,6 +717,7 @@ export default class PemetaanDialogModal implements OnInit {
     id: '',
     item: '',
     price: '',
+    description_product: '',
     src: '',
     fav: false
   } 
@@ -834,6 +897,9 @@ export default class PemetaanDialogModal implements OnInit {
       case 'price':
         this.itemTemp.price = event.srcElement.value;
         break
+      case 'description':  // Add new case for description
+        this.itemTemp.description_product = event.srcElement.value;
+        break
     }
 
     this.itemTemp.price = (this.itemTemp.price == '') ? 'Gratis' : this.itemTemp.price
@@ -859,7 +925,7 @@ export default class PemetaanDialogModal implements OnInit {
     }
   }
 
-  onAddItem(a: HTMLInputElement, b: HTMLInputElement) {
+  onAddItem(a: HTMLInputElement, b: HTMLInputElement, c: HTMLInputElement) {
     if(this.isItemHasImage) this.itemTemp.src = document.getElementById('item-image-preview')?.getAttribute('src')!
     this.itemTemp.id = this.generateToken(16)
     document.getElementById('item-image-preview')?.setAttribute('src', '/assets/images/placeholder.png')
@@ -871,7 +937,8 @@ export default class PemetaanDialogModal implements OnInit {
       id: '',
       item: '',
       src: '',
-      price: '',
+      price: '', 
+      description_product: '', 
       fav: false
     }
 
@@ -881,6 +948,7 @@ export default class PemetaanDialogModal implements OnInit {
 
     a.value = ''
     b.value = ''
+    c.value = ''
 
     this.disableItemsButton = true
     this.isItemHasImage = false
@@ -1109,7 +1177,12 @@ export default class PemetaanDialogModal implements OnInit {
         if(this.locationForm.valid) {
           this.onSaveAllImage()
         } else {
+          console.log(this.data.location);
           this.onError('null')
+        } 
+        if (!result) {
+          console.log('No result provided');
+          return;
         }
       }
     })
@@ -1182,20 +1255,20 @@ export default class PemetaanDialogModal implements OnInit {
     let today = d.getDate() + ' ' + this.getMonth(month) + ' ' + d.getFullYear() + ' ';
     today += d.getHours() + ":" + d.getMinutes() + ':' + d.getSeconds();
 
-    let user: User = {
-      username: "",
-      fullname: "",
-      role: ""
-    }
+    // let user: User = {
+    //   username: "",
+    //   fullname: "",
+    //   role: ""
+    // }
 
     let dusunValue = this.locationForm.value.dusun || 'Unknown Dusun';
     let shopeeValue = this.locationForm.value.shopee || '';
     let facebookValue = this.locationForm.value.facebook || '';
     let instagramValue = this.locationForm.value.instagram || '';
     console.log('Dusun Value:', dusunValue);
-    let userData = JSON.parse(localStorage.getItem('user')!);
+    // let userData = JSON.parse(localStorage.getItem('user')!);
 
-    user = userData ? userData : user;
+    // user = userData ? userData : user;
 
     let location: Location = {
       id: (this.data.location) ? this.data.location.id : this.generateToken(20),
@@ -1212,9 +1285,9 @@ export default class PemetaanDialogModal implements OnInit {
       address: this.locationForm.value.address,
       imageUrl: this.locationForm.value.imageUrl,
       totalFav: (this.data.location) ? this.data.location.totalFav : 0,
-      review: (this.data.location) ? this.data.location.review : [],
+      // review: (this.data.location) ? this.data.location.review : [],
       lastUpdate: today,
-      user: (this.data.location) ? this.data.location.user : user,
+      // user: (this.data.location) ? this.data.location.user : user,
       position: this.data.position
       // rating: this.data.location ? this.data.location.rating : "0"
     }
@@ -1225,8 +1298,7 @@ export default class PemetaanDialogModal implements OnInit {
   async onStoreLocation(location: Location) {
     const app = initializeApp(environment.firebase);
     const db = getFirestore(app);
-
-    Swal.close()
+  
     Swal.fire({
       didOpen: () => {
         Swal.showLoading()
@@ -1234,14 +1306,48 @@ export default class PemetaanDialogModal implements OnInit {
       title: 'Sedang Menyimpan Data...',
       text: 'Harap tunggu sebentar',
     })
-
-    await setDoc(doc(db, "location", location.id), location).then(() => {
+  
+    try {
+      // Prepare the products document
+      const productData = {
+        id: location.id,
+        items: location.items
+      };
+  
+      // Prepare the UMKM document with nested media_social
+      const umkmData = {
+        id: location.id,
+        name: location.name,
+        category: location.category,
+        description: location.description,
+        dusun: location.dusun,
+        openDays: location.openDays,
+        address: location.address,
+        imageUrl: location.imageUrl,
+        totalFav: location.totalFav,
+        lastUpdate: location.lastUpdate,
+        position: location.position,
+        media_social: {
+          shopee: location.shopee,
+          facebook: location.facebook,
+          instagram: location.instagram,
+          phone: location.phone
+        }
+      };
+  
+      // Store data in parallel using Promise.all
+      await Promise.all([
+        setDoc(doc(db, "product", location.id), productData),
+        setDoc(doc(db, "list_umkm", location.id), umkmData)
+      ]);
+      
       this.onSuccess('Berhasil Menyimpan Lokasi!');
-      this.data.callback()
-      this.dialogRef.close()
-    }).catch((reason) => {
-      this.onError("save_location")
-    })
+      this.data.callback();
+      this.dialogRef.close();
+    } catch (error) {
+      this.onError("save_location");
+      console.error("Error storing location:", error);
+    }
   }
 
 
