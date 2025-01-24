@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngaglik-padukuhan": {
+    "web-umkm-tanjungrejo": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ngaglik-padukuhan",
+            "outputPath": "public",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -27,14 +27,16 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/_redirects"
+              "src/assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "lodash"
+            ]
           },
           "configurations": {
             "production": {
@@ -46,8 +48,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "8kb",
+                  "maximumError": "12kb"
                 }
               ],
               "outputHashing": "all"
@@ -67,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "ngaglik-padukuhan:build:production"
+              "browserTarget": "web-umkm-tanjungrejo:build:production"
             },
             "development": {
-              "browserTarget": "ngaglik-padukuhan:build:development"
+              "browserTarget": "web-umkm-tanjungrejo:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -78,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngaglik-padukuhan:build"
+            "browserTarget": "web-umkm-tanjungrejo:build"
           }
         },
         "test": {
@@ -92,8 +94,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/_redirects"
+              "src/assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
@@ -107,9 +108,10 @@
           "options": {
             "prerender": false,
             "ssr": false,
-            "browserTarget": "ngaglik-padukuhan:build:production",
-            "firebaseProject": "ngaglik-padukuhan",
-            "firebaseHostingSite": "ngaglik-padukuhan"
+            "browserTarget": "web-umkm-tanjungrejo:build:production",
+            "firebaseProject": "web-umkm-tanjungrejo",
+            "firebaseHostingSite": "web-umkm-tanjungrejo",
+            "allowedCommonJsDependencies" : ["lodash"]
           }
         }
       }

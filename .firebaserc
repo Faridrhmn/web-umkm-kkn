@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "web-umkm-tanjungrejo": {
+      "hosting": {
+        "web-umkm-tanjungrejo": [
+          "web-umkm-tanjungrejo"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "web-umkm-tanjungrejo"
+  }
+}
