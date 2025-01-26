@@ -298,7 +298,8 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
         openDays: umkm.openDays,
         address: umkm.address,
         imageUrl: umkm.imageUrl,
-        totalFav: umkm.totalFav,
+        // totalFav: umkm.totalFav,
+        totalProduct: product.items ? product.items.length : 0,
         lastUpdate: umkm.lastUpdate,
         position: umkm.position
       };
@@ -649,7 +650,8 @@ interface Location {
   phone: String,
   address: String,
   imageUrl: Array<ImageUrl>,
-  totalFav: number,
+  // totalFav: number,
+  totalProduct: number,
   lastUpdate: String,
   position: Position
 }
@@ -824,7 +826,7 @@ export default class PemetaanDialogModal implements OnInit {
       category: [[], [Validators.required]],
       items: [[]],
       description: [''],
-      dusun: [''],
+      dusun: [''], // buat wajib
       shopee: [''],
       facebook: [''],
       instagram: [''],
@@ -1284,11 +1286,12 @@ export default class PemetaanDialogModal implements OnInit {
       phone: this.locationForm.value.phone,
       address: this.locationForm.value.address,
       imageUrl: this.locationForm.value.imageUrl,
-      totalFav: (this.data.location) ? this.data.location.totalFav : 0,
+      // totalFav: (this.data.location) ? this.data.location.totalFav : 0,
       // review: (this.data.location) ? this.data.location.review : [],
       lastUpdate: today,
       // user: (this.data.location) ? this.data.location.user : user,
-      position: this.data.position
+      position: this.data.position,
+      totalProduct : 0
       // rating: this.data.location ? this.data.location.rating : "0"
     }
 
@@ -1308,6 +1311,7 @@ export default class PemetaanDialogModal implements OnInit {
     })
   
     try {
+      const totalProduct = location.items ? location.items.length : 0;
       // Prepare the products document
       const productData = {
         id: location.id,
@@ -1324,7 +1328,8 @@ export default class PemetaanDialogModal implements OnInit {
         openDays: location.openDays,
         address: location.address,
         imageUrl: location.imageUrl,
-        totalFav: location.totalFav,
+        // totalFav: location.totalFav,
+        totalProduct : totalProduct,
         lastUpdate: location.lastUpdate,
         position: location.position,
         media_social: {

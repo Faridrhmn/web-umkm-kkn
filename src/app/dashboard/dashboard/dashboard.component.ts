@@ -173,7 +173,7 @@ export class DashboardComponent implements OnInit {
     const app = initializeApp(environment.firebase);
     const db = getFirestore(app);
 
-    const q = query(collection(db, "location"));
+    const q = query(collection(db, "list_umkm"));
     onSnapshot(q, (querySnapshot) => {
       this.totalUMKM = querySnapshot.size;
 
@@ -197,6 +197,15 @@ export class DashboardComponent implements OnInit {
 
             this.addfavItem = false;
           }
+        })
+      }
+    })
+
+    const w = query(collection(db, "product"));
+    onSnapshot(w, (querySnapshot) => {
+      if(querySnapshot.size > 0) {
+        querySnapshot.forEach(async (item) => {
+          this.totalItems += item.data()["items"].length
         })
       }
     })
