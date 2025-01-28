@@ -61,6 +61,7 @@ interface MediaSocial {
 }
 
 
+
 @Component({
   selector: 'app-pemetaan',
   templateUrl: './pemetaan.component.html',
@@ -300,6 +301,14 @@ export class PemetaanComponent implements OnInit, AfterContentInit {
         imageUrl: umkm.imageUrl,
         // totalFav: umkm.totalFav,
         totalProduct: product.items ? product.items.length : 0,
+        // contact : new Map([
+        //   ["address", umkm.address],
+        //   ["phone", umkm.media_social.phone],
+        // ]),
+        contact: {
+          address: umkm.address,
+          phone: umkm.media_social.phone,
+        },
         lastUpdate: umkm.lastUpdate,
         position: umkm.position
       };
@@ -652,6 +661,8 @@ interface Location {
   imageUrl: Array<ImageUrl>,
   // totalFav: number,
   totalProduct: number,
+  // contact: Map<string, string>;
+  contact: { [key: string]: string };
   lastUpdate: String,
   position: Position
 }
@@ -1273,6 +1284,10 @@ export default class PemetaanDialogModal implements OnInit {
     // user = userData ? userData : user;
 
     let location: Location = {
+      contact: {
+        address: this.locationForm.value.address,
+        phone: this.locationForm.value.phone,
+      },
       id: (this.data.location) ? this.data.location.id : this.generateToken(20),
       name: this.locationForm.value.name,
       category: this.locationForm.value.category,
@@ -1320,6 +1335,7 @@ export default class PemetaanDialogModal implements OnInit {
   
       // Prepare the UMKM document with nested media_social
       const umkmData = {
+        contact: location.contact,
         id: location.id,
         name: location.name,
         category: location.category,
